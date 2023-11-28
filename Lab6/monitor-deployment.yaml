@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitor-deployment
+  labels:
+    app: monitor
+spec:
+  replicas: 0  # Set to 0 initially and scale manually
+  selector:
+    matchLabels:
+      app: monitor
+  template:
+    metadata:
+      labels:
+        app: monitor
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8099"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: monitor-container
+        image: emilemu/monitor:fversion2
+        ports:
+        - containerPort: 8080  # Set the appropriate port for your monitor
+        resources:
+          requests:
+            cpu: 200m
+
