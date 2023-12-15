@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab7-incident-monitor
+  labels:
+    app: lab7-incident-monitor
+spec:
+  replicas: 0  # Set to 0 initially and scale manually
+  selector:
+    matchLabels:
+      app: lab7-incident-monitor
+  template:
+    metadata:
+      labels:
+        app: lab7-incident-monitor
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8099"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: lab7-incident-monitor-container
+        image: emilemu/lab7-incident-monitor:latest
+        command: ["python3"]
+        args: ["incident_detector.py"]
+        ports:
+        - containerPort: 8099  # Set the appropriate port for your monitor
+        resources:
+          requests:
+            cpu: 200m
+
